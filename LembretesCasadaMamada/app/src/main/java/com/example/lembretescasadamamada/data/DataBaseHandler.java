@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import com.example.lembretescasadamamada.model.UsuarioLembrete;
 import com.example.lembretescasadamamada.util.Util;
 
+import java.util.ArrayList;
+
 public class DataBaseHandler extends SQLiteOpenHelper {
 
     public DataBaseHandler(@Nullable Context context) {
@@ -61,8 +63,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String insertSQL = "INSERT INTO "+Util.TABLE_NAME+
                 "("+ Util.KEY_NAME +","+ Util.KEY_NOTE +","+ Util.KEY_DATE_NOTE + ","+ Util.KEY_TITLE_NOTE +") VALUES " +
                 "('"+ nota.getNomeCompleto() +"','"
-                + nota.getLembrete()
-                + nota.getDataLembrete()
+                + nota.getLembrete() +"','"
+                + nota.getDataLembrete() +"','"
                 + nota.getTituloLembrete() + "');";
         db.execSQL(insertSQL);
         Log.d("SQL_Insert", "Inseri o contato: " + nota.getNomeCompleto());
@@ -81,6 +83,20 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             Log.d("SQL_Retrieve", "Recuperei o lembrete: " + cursor.getString(2));
         }
         return lembretes;
-    };
+    }
+    /*
+    public ArrayList<String> getLembretesArrayVersion(String nomeChave){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String consulta = "SELECT * FROM "+Util.TABLE_NAME+" WHERE "+Util.KEY_NAME+" = '"+ nomeChave+"';";
+        Log.d("SQL_Retrieve", "Fazendo a consulta "+consulta);
+        Cursor cursor = db.rawQuery(consulta, null);
+        String lembretes = "";
+        Log.d("SQL_Retrieve", "Pedindo o contato.." + cursor.getCount());
+        while (cursor.moveToNext()) {
+            lembretes = lembretes + cursor.getString(2);
+            Log.d("SQL_Retrieve", "Recuperei o lembrete: " + cursor.getString(2));
+        }
+        return lembretes;
+    }*/
 
 }

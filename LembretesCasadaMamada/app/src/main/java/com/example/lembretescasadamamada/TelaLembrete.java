@@ -1,6 +1,8 @@
 package com.example.lembretescasadamamada;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +17,9 @@ import android.widget.TextView;
 import com.example.lembretescasadamamada.data.DataBaseHandler;
 import com.example.lembretescasadamamada.model.UsuarioLembrete;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class TelaLembrete extends AppCompatActivity {
 
     private TextView nomeUsuario;
@@ -24,6 +29,8 @@ public class TelaLembrete extends AppCompatActivity {
     private String nomeChave;
     private EditText lembreteParaSalvar;
     private CheckBox dropCheck;
+    private EditText dataLembrete;
+    private RecyclerView listaLembretesRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +42,13 @@ public class TelaLembrete extends AppCompatActivity {
         this.setLembretesSalvos(findViewById(R.id.listaLembretes));
         this.setBotaoSalvar(findViewById(R.id.botaoSalvar));
         this.setDropCheck(findViewById(R.id.dropCheck));
+        this.setDataLembrete(findViewById(R.id.dataLembrete));
 
         this.db = new DataBaseHandler(TelaLembrete.this);
         this.setNomeChave(this.getIntent().getStringExtra("nomeUsuario"));
-        this.getNomeUsuario().setText(this.getNomeChave());
+        this.getNomeUsuario().setText("Olá, " + this.getNomeChave());
+
+        this.setListaLembretesRV(findViewById(R.id.listaLembretesRV));
         this.atualizaCaixaTexto();
     }
 
@@ -90,8 +100,24 @@ public class TelaLembrete extends AppCompatActivity {
         this.nomeUsuario = nomeUsuario;
     }
 
+    public RecyclerView getListaLembretesRV() {
+        return listaLembretesRV;
+    }
+
+    public void setListaLembretesRV(RecyclerView listaLembretesRV) {
+        this.listaLembretesRV = listaLembretesRV;
+    }
+
+    public EditText getDataLembrete() {
+        return dataLembrete;
+    }
+
+    public void setDataLembrete(EditText dataLembrete) {
+        this.dataLembrete = dataLembrete;
+    }
 
     public void salvarLembrete(View v) {
+        Date dataL = null;
 
         if (this.getDropCheck().isChecked()) {
             db.dropDB();
@@ -100,7 +126,20 @@ public class TelaLembrete extends AppCompatActivity {
         } else {
             UsuarioLembrete lembrete = new UsuarioLembrete();
             lembrete.setNomeCompleto(this.getNomeChave());
-            lembrete.setLembrete(this.getLembreteParaSalvar().getText().toString() + "\n");
+            lembrete.setTituloLembrete(this.getLembretesSalvos().getText().toString());
+            lembrete.setLembrete(this.getLembreteParaSalvar().getText().toString());
+            try{
+                dataL = new SimpleDateFormat("dd/MM/yyyy").parse(
+                        this.getDataLembrete().getText().toString()
+                );
+            }catch (Exception e){
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setMessage("Erro")
+                        .setNeutralButton("Ok", null)
+                        .show();
+            }
+            lembrete.setDataLembrete(dataL);
+            Log.i("Plaintext", lembrete.toString());
             db.addLembrete(lembrete);
             this.atualizaCaixaTexto();
         }
@@ -110,6 +149,6 @@ public class TelaLembrete extends AppCompatActivity {
     private void atualizaCaixaTexto() {
         String resposta = db.getLembretes(this.getNomeChave());
         Log.i("Plaintext", "here" + resposta);
-        this.getLembretesSalvos().setText(resposta);
+        //this.getLembretesSalvos().setText(resposta);
     }
 }

@@ -64,4 +64,12 @@ public class UsuarioLembrete {
     public void setDataLembrete(Date dataLembrete) {
         this.dataLembrete = dataLembrete;
     }
+
+    @Override
+    public String toString(){
+        return this.getNomeCompleto() + "\n\t"
+                + this.getTituloLembrete() + "\n\t"
+                + this.getLembrete() + "\n\t"
+                + this.getDataLembrete().toString();
+    }
 }
