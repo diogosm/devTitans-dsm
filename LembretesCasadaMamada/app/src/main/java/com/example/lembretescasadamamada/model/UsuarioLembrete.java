@@ -8,7 +8,6 @@ public class UsuarioLembrete {
     private String tituloLembrete;
     private Date dataLembrete;
     private String lembrete;
-    private String senha;
 
     public UsuarioLembrete() {
     }
@@ -24,15 +23,6 @@ public class UsuarioLembrete {
         this.setLembrete(lembrete);
         this.setDataLembrete(dataLembrete);
         this.setTituloLembrete(tituloLembrete);
-    }
-
-    public UsuarioLembrete(int id, String nomeCompleto, String tituloLembrete, Date dataLembrete, String lembrete, String senha) {
-        this.setId(id);
-        this.setNomeCompleto(nomeCompleto);
-        this.setLembrete(lembrete);
-        this.setDataLembrete(dataLembrete);
-        this.setTituloLembrete(tituloLembrete);
-        this.setSenha(senha);
     }
 
     public int getId() {
@@ -75,18 +65,9 @@ public class UsuarioLembrete {
         this.dataLembrete = dataLembrete;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
     @Override
     public String toString(){
         return this.getNomeCompleto() + "\n\t"
-                + this.getSenha() + "\n\t"
                 + this.getTituloLembrete() + "\n\t"
                 + this.getLembrete() + "\n\t"
                 + this.getDataLembrete().toString();

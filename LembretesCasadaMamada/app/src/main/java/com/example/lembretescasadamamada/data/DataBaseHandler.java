@@ -20,6 +20,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        String CREATE_USUARIO_TABLE = "CREATE TABLE "+ Util.TABLE_USUARIO + " ("
+                + Util.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , "
+                + Util.KEY_NAME + " TEXT, "
+                + Util.KEY_PASSWORD + " TEXT "
+                + " );";
         String CREATE_NOTE_TABLE = "CREATE TABLE "+ Util.TABLE_NAME + " ("
                 + Util.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , "
                 + Util.KEY_NAME + " TEXT, "
@@ -29,19 +34,28 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 + " );";
         Log.d("SQL_Create", "Executando: " + CREATE_NOTE_TABLE);
         db.execSQL(CREATE_NOTE_TABLE);
+        Log.d("SQL_Create", "Executando: " + CREATE_USUARIO_TABLE);
+        db.execSQL(CREATE_USUARIO_TABLE);
     }
 
     public void criarTabela(){
         SQLiteDatabase db = this.getWritableDatabase();
+        String CREATE_USUARIO_TABLE = "CREATE TABLE "+ Util.TABLE_USUARIO + " ("
+                + Util.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , "
+                + Util.KEY_NAME + " TEXT, "
+                + Util.KEY_PASSWORD + " TEXT "
+                + " );";
         String CREATE_NOTE_TABLE = "CREATE TABLE "+ Util.TABLE_NAME + " ("
                 + Util.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , "
                 + Util.KEY_NAME + " TEXT, "
-                + Util.KEY_NOTE + " TEXT "
+                + Util.KEY_NOTE + " TEXT, "
                 + Util.KEY_DATE_NOTE + " DATE, "
                 + Util.KEY_TITLE_NOTE + " TEXT "
                 + " );";
         Log.d("SQL_Create", "Executando: " + CREATE_NOTE_TABLE);
         db.execSQL(CREATE_NOTE_TABLE);
+        Log.d("SQL_Create", "Executando: " + CREATE_USUARIO_TABLE);
+        db.execSQL(CREATE_USUARIO_TABLE);
     }
 
     @Override
@@ -56,6 +70,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Log.d("SQL_Drop", "Apagando tudo.. ");
         String DROP_TABLE = "DROP TABLE IF EXISTS " + Util.TABLE_NAME + ";";
         db.execSQL(DROP_TABLE);
+        String DROP_TABLE_USUARIO = "DROP TABLE IF EXISTS " + Util.TABLE_USUARIO + ";";
+        db.execSQL(DROP_TABLE_USUARIO);
     }
 
     public void addLembrete(UsuarioLembrete nota) {
