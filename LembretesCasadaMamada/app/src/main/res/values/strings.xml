@@ -11,4 +11,6 @@
     <string name="data_lembrete">Data do lembrete</string>
     <string name="apagar">Apagar?</string>
     <string name="todo">TODO</string>
+    <string name="senha">Senha</string>
+    <string name="todo2">TODO</string>
 </resources>
