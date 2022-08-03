@@ -10,4 +10,5 @@
     <string name="escreva_aqui_o_seu_lembrete_titulo">Escreva aqui o titulo do lembrete</string>
     <string name="data_lembrete">Data do lembrete</string>
     <string name="apagar">Apagar?</string>
+    <string name="todo">TODO</string>
 </resources>
