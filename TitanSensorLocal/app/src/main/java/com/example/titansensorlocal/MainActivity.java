@@ -12,9 +12,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
+//import android.location.Location;
+//import android.location.LocationManager;
+//import android.location.LocationRequest;
 import android.location.Location;
 import android.location.LocationManager;
-import android.location.LocationRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -39,6 +41,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.location.*;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private String cameraId;
     FusedLocationProviderClient fusedLocationProviderClient;
     int PERMISSION_ID = 44;
+    private TextView xv, yz, zv;
+    float xant, yant, zant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +65,14 @@ public class MainActivity extends AppCompatActivity {
         longitTextView = findViewById(R.id.lonTextView);
         updateLocation = findViewById(R.id.updateLocation);
         toggleButton = findViewById(R.id.onOffFlashlight);
+        this.setXv(findViewById(R.id.textXValue));
+        this.setYz(findViewById(R.id.textYValue));
+        this.setZv(findViewById(R.id.textZValue));
+        xant = yant = zant = -1;
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(listener, sensor, (1000 * 1000)/4);
 
         boolean isFlashAvailable;
         isFlashAvailable = getApplicationContext().getPackageManager()
@@ -75,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try{
-            cameraId = cameraManager.getCameraIdList()[1];
+            //cameraId = cameraManager.getCameraIdList()[1];
+            cameraId = cameraManager.getCameraIdList()[0]; // celular real
         } catch (CameraAccessException e){
             e.printStackTrace();
         }
@@ -98,6 +108,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public TextView getXv() {
+        return xv;
+    }
+
+    public void setXv(TextView xv) {
+        this.xv = xv;
+    }
+
+    public TextView getYz() {
+        return yz;
+    }
+
+    public void setYz(TextView yz) {
+        this.yz = yz;
+    }
+
+    public TextView getZv() {
+        return zv;
+    }
+
+    public void setZv(TextView zv) {
+        this.zv = zv;
+    }
+
     private SensorEventListener listener = new SensorEventListener() {
         @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
@@ -105,15 +139,30 @@ public class MainActivity extends AppCompatActivity {
             float xvalue = Math.abs(sensorEvent.values[0]);
             float yvalue = Math.abs(sensorEvent.values[1]);
             float zvalue = Math.abs(sensorEvent.values[2]);
-            int praMovimentar = 12;
+            int praMovimentar = 20;
+
+            //Log.d("SENSOR", "Moves: " + xvalue + " " + yvalue +
+            //        " " + zvalue);
+
+            if( !(Math.abs(xvalue - xant) > 1e-1
+                && Math.abs(yvalue - yant) > 1e-1
+                && Math.abs(zvalue - zant) > 1e-1)){
+                return;
+            }
 
             if(xvalue > praMovimentar
-                || yvalue > praMovimentar
-                || zvalue > praMovimentar){
+                && xvalue + yvalue > praMovimentar+3
+                && zvalue < 1.0){
                 Toast.makeText(MainActivity.this, "shake function activated",
                         Toast.LENGTH_SHORT).show();
-                Log.d("SENSOR", "Balancei...");
+                Log.d("SENSOR", "Balancei..." + xvalue + " "
+                    + yvalue + " "
+                    + zvalue);
                 changeLedStatus();
+
+                getXv().setText(String.format("%.2f", xvalue));
+                getYz().setText(String.format("%.2f", yvalue));
+                getZv().setText(String.format("%.2f", zvalue));
             }
         }
 
@@ -209,8 +258,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.S)
-    @SuppressLint("MissingPermission")
+    @SuppressLint({"MissingPermission", "RestrictedApi"})
     private void requestNewLocationData() {
         LocationRequest mLocationRequest;
         mLocationRequest = new LocationRequest();
@@ -218,8 +266,8 @@ public class MainActivity extends AppCompatActivity {
         mLocationRequest.setInterval(5);
         mLocationRequest.setFastestInterval(0);
         mLocationRequest.setNumUpdates(1);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
     }
 
     private LocationCallback mLocationCallback = new LocationCallback() {

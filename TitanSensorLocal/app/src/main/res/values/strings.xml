@@ -8,4 +8,6 @@
     <string name="latitude">Latitude:</string>
     <string name="latitude_will_be_here" />
     <string name="turn_on_off_camera_led_flashlight_android">Turn On/Off Camera LED/ Flashlight Android</string>
+    <string name="aceler_metro">Acelerômetro</string>
+    <string name="_0_5">0.5</string>
 </resources>
