@@ -3,7 +3,9 @@ package com.example.recyclerviewtest.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +26,7 @@ public class ParentItemAdapter extends RecyclerView.Adapter<ParentItemAdapter.Pa
     @NonNull
     @Override
     public ParentViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate( R.layout.parent_item,viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.parent_item, viewGroup, false);
         return new ParentViewHolder(view);
     }
 
@@ -60,3 +62,4 @@ public class ParentItemAdapter extends RecyclerView.Adapter<ParentItemAdapter.Pa
             ChildRecyclerView = itemView.findViewById(R.id.child_recyclerview);
         }
     }
+}

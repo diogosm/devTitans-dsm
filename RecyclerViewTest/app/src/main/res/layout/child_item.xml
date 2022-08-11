@@ -39,6 +39,12 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/child_item_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold" />
+
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
