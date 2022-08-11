@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     int PERMISSION_ID = 44;
     private TextView xv, yz, zv;
     float xant, yant, zant;
+    float[] gravity = new float[3];
+    float[] linear_acceleration = new float[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(listener, sensor, (1000 * 1000)/4);
+        sensorManager.registerListener(listener, sensor, 1000 * 1000 * 100);
 
         boolean isFlashAvailable;
         isFlashAvailable = getApplicationContext().getPackageManager()
@@ -141,14 +143,30 @@ public class MainActivity extends AppCompatActivity {
             float zvalue = Math.abs(sensorEvent.values[2]);
             int praMovimentar = 20;
 
-            //Log.d("SENSOR", "Moves: " + xvalue + " " + yvalue +
-            //        " " + zvalue);
+            float alpha = 0.8f;
 
-            if( !(Math.abs(xvalue - xant) > 1e-1
-                && Math.abs(yvalue - yant) > 1e-1
+            // Isolate the force of gravity with the low-pass filter.
+            gravity[0] = alpha * gravity[0] + (1 - alpha) * sensorEvent.values[0];
+            gravity[1] = alpha * gravity[1] + (1 - alpha) * sensorEvent.values[1];
+            gravity[2] = alpha * gravity[2] + (1 - alpha) * sensorEvent.values[2];
+
+            // Remove the gravity contribution with the high-pass filter.
+            linear_acceleration[0] = sensorEvent.values[0] - gravity[0];
+            linear_acceleration[1] = sensorEvent.values[1] - gravity[1];
+            linear_acceleration[2] = sensorEvent.values[2] - gravity[2];
+
+            if( !(Math.abs(xvalue - xant) > 10
+                && Math.abs(yvalue - yant) > 10
                 && Math.abs(zvalue - zant) > 1e-1)){
                 return;
             }
+
+            Log.d("SENSOR_ACC", "Acceleration " +
+                    linear_acceleration[0] + " "+
+                    linear_acceleration[1] + " "+
+                    linear_acceleration[2]);
+            Log.d("SENSOR", "Moves: " + xvalue + " " + yvalue +
+                    " " + zvalue);
 
             if(xvalue > praMovimentar
                 && xvalue + yvalue > praMovimentar+3
