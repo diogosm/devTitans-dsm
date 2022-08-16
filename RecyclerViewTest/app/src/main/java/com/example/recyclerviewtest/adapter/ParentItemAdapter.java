@@ -45,6 +45,10 @@ public class ParentItemAdapter extends RecyclerView.Adapter<ParentItemAdapter.Pa
         parentViewHolder.ChildRecyclerView.setRecycledViewPool(viewPool);
     }
 
+    public ParentItem getPos(int position){
+        return this.itemList.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return itemList.size();
