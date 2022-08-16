@@ -21,7 +21,13 @@ void turnGreen(){
   digitalWrite(_LED_GREEN, HIGH);
   digitalWrite(_LED_YELLOW, LOW);
   digitalWrite(_LED_RED, LOW);
-  delay(3000);
+  delay(2000);
+  for(int i = 0;i<5;i++){
+    digitalWrite(_LED_GREEN, HIGH);
+    delay(100);
+    digitalWrite(_LED_GREEN, LOW);
+    delay(100);
+  }
 }
 
 void turnYellow(){
