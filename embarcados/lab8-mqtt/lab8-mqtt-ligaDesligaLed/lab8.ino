@@ -129,6 +129,6 @@ void loop() {
     snprintf (msg, MSG_BUFFER_SIZE, "hello world #%ld", value);
     Serial.print("Publish message: ");
     Serial.println(msg);
-    client.publish("outTopic", msg);
+    client.publish("DiogoSoares/outTopic", msg);
   }
 }
